@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My_Game</title>
+	</head>
+	<body>
+		<meta charset="utf-8">
+		<H1>My_Game</H1>
+		<canvas id="canvas" width="400" height="400" style="background-color: beige;">
+			<!-- In case the canvas element is not supported by the web browser. -->
+			<p>This browser does not support the<code>canvas</code> element.</p>
+		</canvas>
+        <script src="arrow.js"></script>
+        <script src="utils.js"></script>
+		<script>
+			utils.prepareFrames();
+			
+			var canvas;
+			var context;
+            var mouse;
+            var arrow;
+
+            // Apress Foundation HTML5 Animation, Location: 46 (Trigonometry and Rotation)
+
+			window.onload = function() {
+				// When the document has finished loading, the window object
+				// executes the function assigned to its onload property
+				canvas = document.getElementById('canvas');
+				context = canvas.getContext('2d');
+                mouse = utils.captureMouse(canvas);
+                arrow = new Arrow();
+                arrow.x = canvas.width / 2;
+                arrow.y = canvas.height / 2;
+
+                (function drawFrame() {
+                    window.requestAnimationFrame(drawFrame, canvas);
+
+                    // You give the atan2(y, x) opposite/hypotoneuse.
+
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    var dx = mouse.x - arrow.x,
+                        dy = mouse.y - arrow.y;
+                    // arrow.rotation = Math.atan2(dy, dx); // in radians
+
+                    var radians = Math.atan(dy/dx);
+                    arrow.rotation = radians;
+
+                    arrow.draw(context);
+                    // console.log(dx, dy);
+                })();
+			};
+
+			if (document.createElement('canvas').getContext) {
+				console.log('Success! The canvas element is supported');
+			}
+		</script>
+	</body>
+</html>

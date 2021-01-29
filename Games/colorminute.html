@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My_Game</title>
+	</head>
+	<body>
+		<meta charset="utf-8">
+		<H1>My_Game</H1>
+		<canvas id="canvas" width="400" height="400" style="background-color: black;">
+			<p>This browser does not support the<code>canvas</code> element.</p>
+		</canvas>
+		<script>
+
+            prepareRequestAnimationFrame();
+
+            var canvas;
+            var canvasContext;
+            
+			window.onload = function() {
+                try {
+                    canvas = document.getElementById('canvas');
+                    canvasContext = canvas.getContext('2d');
+                    console.log('Success! The canvas element is supported');
+                }
+                catch (ex) {
+                    console.error('Failure! The canvas element is NOT supported');
+                    return;
+                }
+
+                drawFrame();
+			};
+			
+            function drawFrame() {
+                window.requestAnimationFrame(drawFrame, canvas);
+                   
+                var seconds = new Date().getSeconds();             
+                var percent = getPercentOfMinute(seconds);
+
+                drawAll(seconds, percent);
+            };
+
+            function drawAll(seconds, percent) {
+                colorContext('black');
+                showSecond(seconds, getGreenToRed(percent));
+            }
+
+            function getPercentOfMinute(seconds) {
+                
+                var percent = (seconds / 60) * 100;
+                return Math.round(percent, 2);
+            }
+            
+            function getGreenToRed(percent){
+                r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+                g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+                return 'rgb('+r+','+g+',0)';
+            }
+
+            function colorContext(drawColor) {
+				canvasContext.fillStyle = drawColor;
+				canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function showSecond(second, fillColor) {
+                var secondText = second < 10 ? "0" + second : second;
+                
+                canvasContext.font = '100px Arial';
+                canvasContext.fillStyle = fillColor;
+                canvasContext.textBaseline = 'middle';
+                canvasContext.textAlign = 'center';
+                canvasContext.fillText(secondText, canvas.width / 2, canvas.height / 2);
+            }
+
+            function prepareRequestAnimationFrame() {
+                if (!window.requestAnimationFrame) {
+                    console.log('Connecting to compatible frame worker');
+                    window.requestAnimationFrame = (window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    window.oRequestAnimationFrame ||
+                    window.msRequestAnimationFrame ||
+                    function (callback) {
+                    return window.setTimeout(callback, 1000/60);
+                    });
+                }
+            }
+		</script>
+	</body>
+</html>

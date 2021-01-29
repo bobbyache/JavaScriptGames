@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Mouse Coordinates</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<meta charset="utf-8">
+		<H1>Mouse Coordinates</H1>
+		<canvas id="canvas" width="400" height="400" style="background-color: black;">
+			<p>This browser does not support the<code>canvas</code> element.</p>
+		</canvas>
+		<script src="utils.js"></script>
+		<script>
+
+			var canvas;
+            var canvasContext;
+            var mouse;
+
+			window.onload = function() {
+				canvas = document.getElementById('canvas');
+                canvasContext = canvas.getContext('2d');
+                mouse = captureMouse(canvas);
+                drawFrame();
+			};
+			
+			if (document.createElement('canvas').getContext) {
+				console.log('Success! The canvas element is supported');
+            }
+
+            function drawFrame() {
+                window.requestAnimationFrame(drawFrame, canvas);
+                drawAll();
+            };
+            
+            function drawAll() {
+                colorContext('black');
+                showPosition(`(${mouse.x}, ${mouse.y})`, 'yellow');
+            }
+
+            function colorContext(drawColor) {
+				canvasContext.fillStyle = drawColor;
+				canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function captureMouse(element) {
+                var mouse = {x: 0, y: 0};
+
+                element.addEventListener('mousemove', function(event) {
+                    var x, y;
+
+                    if (event.pageX) {
+                        x = event.pageX;
+                        y = event.pageY;
+                    } else {
+                        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                        y = event.clientY + document.body.scrollRight + document.documentElement.scrollRight;
+                    }
+
+                    x -= element.offsetLeft;
+                    y -= element.offsetTop;
+
+                    mouse.x = x;
+                    mouse.y = y;
+                }, false);
+
+                return mouse;
+            }
+
+            function showPosition(positionText, fillColor) {
+                canvasContext.font = '50px Arial';
+                canvasContext.fillStyle = fillColor;
+                canvasContext.textBaseline = 'middle';
+                canvasContext.textAlign = 'center';
+                canvasContext.fillText(positionText, canvas.width / 2, canvas.height / 2);
+            }
+		</script>
+	</body>
+</html>

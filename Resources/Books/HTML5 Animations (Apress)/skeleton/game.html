@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My_Game</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<meta charset="utf-8">
+		<H1>My_Game</H1>
+		<canvas id="canvas" width="400" height="400">
+			<!-- In case the canvas element is not supported by the web browser. -->
+			<p>This browser does not support the<code>canvas</code> element.</p>
+		</canvas>
+		<script src="utils.js"></script>
+		<script>
+			utils.prepareFrames();
+			
+			var canvas;
+			var canvasContext;
+			var mouse;
+
+			window.onload = function() {
+				// When the document has finished loading, the window object
+				// executes the function assigned to its onload property
+				canvas = document.getElementById('canvas');
+				canvasContext = canvas.getContext('2d');
+				mouse = captureMouse(canvas);
+				drawFrame();
+			};
+
+			function drawFrame() {
+				window.requestAnimationFrame(drawFrame, canvas);
+            };
+			
+			if (document.createElement('canvas').getContext) {
+				console.log('Success! The canvas element is supported');
+			}
+		</script>
+	</body>
+</html>

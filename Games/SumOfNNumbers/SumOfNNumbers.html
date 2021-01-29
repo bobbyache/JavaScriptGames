@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My_Game</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<meta charset="utf-8">
+        <H1>Sum of all N Numbers</H1>
+        <div>
+            (see Cracking the Code Interview Location 59) - Sum of integers 1 through N. 
+        </div>
+		<canvas id="canvas" width="1000" height="1000">
+			<!-- In case the canvas element is not supported by the web browser. -->
+			<p>This browser does not support the<code>canvas</code> element.</p>
+		</canvas>
+		<script src="utils.js"></script>
+		<script>
+
+			var canvas;
+			var canvasContext;
+
+			window.onload = function() {
+				canvas = document.getElementById('canvas');
+                canvasContext = canvas.getContext('2d');
+                
+                // Shows how the second loop J will be < i roughly half the time, and > i roughly half the time.
+                for(let i = 0; i < 10; i++) {
+                    for (let j = i + 1; j < 11; j++) {     
+                        execute(i, j);
+                    }
+                }
+			};
+			
+            function execute(i, j) {
+                let left = i * 100;
+                let top = j * 100;
+                utils.drawSquare(canvasContext, left, top);
+            }
+            
+		</script>
+	</body>
+</html>
