@@ -93,8 +93,14 @@ window.addEventListener("load", function () {
     }
 
     shootTop() {
-      this.projectiles.push(new Projectile(this.game, this.x, this.y));
-      console.log(this.projectiles);
+      if (this.game.ammo > 0) {
+        this.projectiles.push(
+          new Projectile(this.game, this.x + 80, this.y + 30)
+        );
+        this.game.ammo -= 1;
+        console.log(this.projectiles);
+        console.log(this.game.ammo);
+      }
     }
   }
 
@@ -106,6 +112,7 @@ window.addEventListener("load", function () {
       this.input = new InputHandler(this);
       // all keys that are currently active
       this.keys = [];
+      this.ammo = 20;
     }
 
     update() {
