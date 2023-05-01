@@ -43,5 +43,15 @@ window.addEventListener('load', function() {
     
     const game = new Game(canvas.width, canvas.height);
     
+    // animation loop
+    function animate() {
+        game.update();
+        game.draw(ctx);
+
+        // calling animate will enter an endless animation loop.
+        window.requestAnimationFrame(animate);
+    }
+
+    animate();
 });
 
