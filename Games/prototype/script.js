@@ -101,6 +101,35 @@ window.addEventListener("load", function () {
     }
   }
 
+  class Enemy {
+    constructor(game) {
+      this.game = game;
+      this.x = this.game.width;
+      this.speedX = Math.random() * -1.5 - 0.5;
+      this.markedForDeletion = false;
+    }
+
+    update() {
+      this.x += this.speedX;
+      if (this.x + this.width < 0) this.markedForDeletion = true;
+    }
+
+    draw(context) {
+      context.fillStyle = "red";
+      context.fillRect(this.x, this.y, this.width, this.height);
+    }
+  }
+
+  class Angler1 extends Enemy {
+    constructor(game) {
+      super(game);
+      this.width = 228 * 0.2;
+      this.height = 169 * 0.2;
+      // flying fish machines must be above ground...
+      this.y = Math.random() * (this.game.height * 0.9 - this.height);
+    }
+  }
+
   class UI {
     constructor(game) {
       this.game = game;
@@ -127,11 +156,19 @@ window.addEventListener("load", function () {
       this.ui = new UI(this);
       // all keys that are currently active
       this.keys = [];
+
       // ammo management
       this.ammo = 20;
       this.maxAmmo = 50;
       this.ammoTimer = 0;
       this.ammoInterval = 500;
+
+      // enemy management
+      this.enemies = [];
+      this.enemyTimer = 0;
+      this.enemyTimerInterval = 1000;
+
+      this.gameOver = false;
     }
 
     update(deltaTime) {
@@ -144,11 +181,30 @@ window.addEventListener("load", function () {
       } else {
         this.ammoTimer += deltaTime;
       }
+      this.enemies.forEach((enemy) => {
+        enemy.update();
+      });
+      this.enemies = this.enemies.filter(
+        (enemy) => !enemy.markedForDeletion === true
+      );
+
+      if (this.enemyTimer > this.enemyTimerInterval && !this.gameOver) {
+        this.addEnemy();
+        this.enemyTimer = 0;
+      } else {
+        this.enemyTimer += deltaTime;
+      }
     }
 
     draw(context) {
       this.player.draw(context);
       this.ui.draw(context);
+      this.enemies.forEach((enemy) => enemy.draw(context));
+    }
+
+    addEnemy() {
+      this.enemies.push(new Angler1(this));
+      console.log(this.enemies);
     }
   }
 
