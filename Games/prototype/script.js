@@ -12,7 +12,7 @@ window.addEventListener('load', function() {
             this.height = 190;
             this.x = 20;
             this.y = 100;
-            this.speedY = 0;
+            this.speedY = 0.2;
         }
     
         update() {
@@ -45,6 +45,7 @@ window.addEventListener('load', function() {
     
     // animation loop
     function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         game.update();
         game.draw(ctx);
 
