@@ -19,7 +19,6 @@ window.addEventListener("load", function () {
         } else if (e.key === " ") {
           this.game.player.shootTop();
         }
-        console.log(this.game.keys);
         // adding more keys is easy...
       });
       window.addEventListener("keyup", (e) => {
@@ -98,8 +97,6 @@ window.addEventListener("load", function () {
           new Projectile(this.game, this.x + 80, this.y + 30)
         );
         this.game.ammo -= 1;
-        console.log(this.projectiles);
-        console.log(this.game.ammo);
       }
     }
   }
@@ -112,11 +109,23 @@ window.addEventListener("load", function () {
       this.input = new InputHandler(this);
       // all keys that are currently active
       this.keys = [];
+      // ammo management
       this.ammo = 20;
+      this.maxAmmo = 50;
+      this.ammoTimer = 0;
+      this.ammoInterval = 500;
     }
 
-    update() {
+    update(deltaTime) {
       this.player.update();
+      // if (this.ammoTimer > this.ammoInterval && this.ammo < this.maxAmmo)
+      //  this.ammo++;
+      if (this.ammoTimer > this.ammoInterval) {
+        if (this.ammo < this.maxAmmo) this.ammo++;
+        this.ammoTimer = 0;
+      } else {
+        this.ammoTimer += deltaTime;
+      }
     }
 
     draw(context) {
@@ -125,16 +134,21 @@ window.addEventListener("load", function () {
   }
 
   const game = new Game(canvas.width, canvas.height);
+  let lastTime = 0;
 
-  // animation loop
-  function animate() {
+  // animation loop - first argument is the timestamp of this animation loop automatically passed by requestAnimationFrame
+  function animate(timeStamp) {
+    // Delta time is the difference in milliseconds between the timestamp from this loop and the timestamp from the previous loop.
+    const deltaTime = timeStamp - lastTime;
+    lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.update();
+    game.update(deltaTime);
     game.draw(ctx);
 
     // calling animate will enter an endless animation loop.
     window.requestAnimationFrame(animate);
   }
 
-  animate();
+  // pass 0 as the first timestamp here...
+  animate(0);
 });
